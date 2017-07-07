@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alcornea <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: alcornea <alcornea@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/07/01 20:44:23 by alcornea          #+#    #+#              #
-#    Updated: 2017/07/03 18:37:33 by alcornea         ###   ########.fr        #
+#    Updated: 2017/07/07 15:16:00 by alcornea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	make -C $(LIBFT_PATH)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -L$(LIBFT_PATH) -lft
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -L$(LIBFT_PATH) -lft -ltermcap
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(OBJ_PATH)
