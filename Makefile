@@ -29,16 +29,25 @@ INC_LFT = $(addprefix -I ,$(addprefix $(LIBFT_PATH), $(INC_PATH)))
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 SRC_NAME = main.c \
+					tm_endtm.c \
+					tm_keyhook.c \
+					tm_move.c \
+					tm_print.c \
+					tm_signal.c \
+					tm_size.c \
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	make -C $(LIBFT_PATH)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -L$(LIBFT_PATH) -lft -ltermcap
+	echo "\\033[1;34mGenerating objects... Please wait.\\033[0;39m"
+
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(OBJ_PATH)
 	$(CC) $(CFLAGS) $(INC) $(INC_LFT) -o $@ -c $<
+	echo "$(NAME) has been created !"
 
 test: $(OBJ)
 	$(CC) -o $(NAME) $(OBJ) -L$(LIBFT_PATH) -lft
