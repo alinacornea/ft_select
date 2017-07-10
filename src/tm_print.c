@@ -14,5 +14,9 @@
 
 void print_list(t_select *tm)
 {
+  t_lsarg *tmp;
+
+  tmp = NULL;
+  select_view(tm->ls);
   ft_putstr(tm->ls->arg);
 }

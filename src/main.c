@@ -50,27 +50,18 @@ void tm_clear(void)
 	tputs(tgetstr("cl", NULL), 1, pputchar);
 }
 
-
-// int check_size(t_select *tmp)
-// {
-// 	struct winsize win;
-
-// 	/*need to check for the screen size and if will be to small to display an error and clear te screen
-// 	ioctl (fd, TIOCGWINSZ, &win) if it's less than zero
-// 	*/
-// }
-
-void tm_select(char **argv, t_select *tm)
+int  tm_select(char **argv, t_select *tm)
 {
 	tm_clear();
 	parse_arg(argv, tm);
 	print_list(tm);
-	check_size(tm);
-	// while (1)
-	// {
-	// 	if (!tm_keyhook(tm))
-	// 		return (0);
-	// }
+	// check_size(tm);
+	while (1)
+	{
+		if (!tm_keyhook(tm))
+			return (0);
+	}
+	return (0);
 }
 /*
 	term.c_lflag --> local modes
@@ -92,6 +83,8 @@ int tm_init(t_select *tm)
 {
 	struct winsize win;
 
+	if ((tgetent(NULL, getenv("TERM"))) < 1)
+		printf("Check terminal name\n");
 	if ((tcgetattr(0, &(tm->term))) == -1) //call tcgetattr to get the current mode of the particular device ,
 	// and store the result modify only the one we are in interesed in and store theem with tcsetattr
 		return (0);
@@ -116,8 +109,6 @@ int main(int argc, char **argv)
 	(void)argv;
 	(argc < 2) ? printf("Introduce the parameters\n") : (0);
 	tm_signal();
-	if ((tgetent(NULL, getenv("TERM"))) < 1)
-		printf("Check terminal name\n");
 	(!tm_init(&tm)) ? (printf("Initialing terminal failed\n")) : (0);
 	(argc >= 2) ? tm_select(argv, &tm) : (0);
 	tm_endtm(&tm);

@@ -42,13 +42,12 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	make -C $(LIBFT_PATH)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -L$(LIBFT_PATH) -lft -ltermcap
-	echo "\\033[1;34mGenerating objects... Please wait.\\033[0;39m"
+	echo "\\033[1;34m$(NAME) has been created!\n\\033[0;39m\\033[1;31mRun: ./ft_select [arg1] [arg2] ...\\033[0;39m"
 
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(OBJ_PATH)
 	$(CC) $(CFLAGS) $(INC) $(INC_LFT) -o $@ -c $<
-	echo "$(NAME) has been created !"
 
 test: $(OBJ)
 	$(CC) -o $(NAME) $(OBJ) -L$(LIBFT_PATH) -lft

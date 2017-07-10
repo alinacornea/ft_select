@@ -10,3 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_select.h"
+
+void move_up(t_select *tm)
+{
+  t_lsarg *tmp;
+
+  tmp = tm->ls;
+  while (tmp->line != 1)
+    tmp = tmp->next;
+  tmp->line = 0;
+  tmp->prev->line = 1;
+}
+
+void move_down(t_select *tm)
+{
+  t_lsarg *tmp;
+
+  tmp = tm->ls;
+  while (tmp->line != 1)
+    tmp = tmp->next;
+  tmp->line = 0;
+  tmp->next->line = 1;
+}

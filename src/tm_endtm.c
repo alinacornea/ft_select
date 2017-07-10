@@ -18,5 +18,5 @@ void tm_endtm(t_select *tm)
 	tcsetattr(0, 0, &(tm->term));
 	tputs(tgetstr("te", NULL), 1, pputchar);
 	tputs(tgetstr("ve", NULL), 1, pputchar); //enable the cursor
-	(tm->select) ? print_list(tm) : (0); // check to print only if a arg was selected 
+	(tm->enter) ? print_list(tm) : (0); // check to print only if a arg was selected 
 }

@@ -26,6 +26,7 @@
 # define KEY_ASCII(c)	(c)
 # define KEY_ESC		27
 # define KEY_BACK		127
+# define KEY_END 4610843
 # define KEY_DELETE		2117294875
 # define KEY_RETURN		10
 # define KEY_UP			4283163
@@ -33,6 +34,7 @@
 # define KEY_DOWN		4348699
 # define KEY_CTRL_A		1
 # define KEY_SPACE    32
+# define KEY_TAB 9
 # define buffer 2048
 # define BUFFER *(unsigned int *)buffer
 /*
@@ -62,11 +64,11 @@ typedef struct s_select
 {
     struct termios term;
     char          *name;
-    // char *term;
+    char **ret_tab;
     int col;
     int row;
     int count[2];
-    int select;
+    int enter;
     t_lsarg *ls;
 
 
@@ -83,5 +85,7 @@ void    tm_endtm(t_select *tm);
 int     check_size(t_select *tm);
 void    re_size(void);
 void get_signal(int i);
+void move_up(t_select *tm);
+void move_down(t_select *tm);
 
 #endif

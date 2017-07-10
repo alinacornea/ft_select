@@ -16,7 +16,7 @@ t_lsarg *init_list()
 {
   t_lsarg *tmp;
 
-  tmp = ft_memalloc(sizeof(t_list));
+  tmp = ft_memalloc(sizeof(t_lsarg));
   tmp->arg = NULL;
   tmp->select = 0;
   tmp->line = 0;
