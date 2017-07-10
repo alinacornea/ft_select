@@ -66,12 +66,11 @@ void tm_select(char **argv, t_select *tm)
 	parse_arg(argv, tm);
 	print_list(tm);
 	check_size(tm);
-	while (1)
-	{
-		if (!tm_keyhook(tm))
-			return (0);
-	}
-	return (0);
+	// while (1)
+	// {
+	// 	if (!tm_keyhook(tm))
+	// 		return (0);
+	// }
 }
 /*
 	term.c_lflag --> local modes
@@ -115,11 +114,11 @@ int main(int argc, char **argv)
 	t_select tm;
 
 	(void)argv;
-	if (argc < 2) : printf("Introduce the parameters\n") : (0);
+	(argc < 2) ? printf("Introduce the parameters\n") : (0);
 	tm_signal();
 	if ((tgetent(NULL, getenv("TERM"))) < 1)
 		printf("Check terminal name\n");
-	(!tm_init(&tm)) ? printf("Initialing terminal failed\n");
+	(!tm_init(&tm)) ? (printf("Initialing terminal failed\n")) : (0);
 	(argc >= 2) ? tm_select(argv, &tm) : (0);
 	tm_endtm(&tm);
 	return (0);

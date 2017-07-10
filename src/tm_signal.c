@@ -34,15 +34,15 @@ static void sig_stop(void)
 	char s[2];
 
 	tm = NULL;
-	tm = tm_stock(tm, 1);
+	// tm = tm_stock(tm, 1);
 	s[0] = tm->term.c_cc[VSUSP];
 	s[1] = 0;
 	tm->term.c_lflag &= ~(ICANON | ECHO);
 	signal(SIGTSTP, SIG_DFL);
 	tm_clear();
 	tcsetattr(0, 0, &(tm->term));
-	tputs(tgetstr("te", NULL)), 1, ft_pputchar);
-	tputs(tgetstr("ve", NULL)), 1, ft_pputchar);
+	tputs((tgetstr("te", NULL)), 1, pputchar);
+	tputs((tgetstr("ve", NULL)), 1, pputchar);
 	ioctl(0, TIOCSTI, s);
 }
 
@@ -51,13 +51,13 @@ static void sig_cont(void)
 	t_select *tm;
 
 	tm = NULL;
-	tm = tm_stock(tm, 1);
+	// tm = tm_stock(tm, 1);
 	tm->term.c_lflag &= ~(ICANON | ECHO);
 	tm->term.c_cc[VMIN] = 1;
 	tm->term.c_cc[VTIME] = 0;
 	tcsetattr(0, 0, &(tm->term));
-	tputs(tgetstr("ti", NULL)), 1, ft_pputchar);
-	tputs(tgetstr("ve", NULL)), 1, ft_pputchar);
+	tputs((tgetstr("ti", NULL)), 1, pputchar);
+	tputs((tgetstr("ve", NULL)), 1, pputchar);
 	signal(SIGTSTP, get_signal);
 	re_size();
 	check_size(tm);
@@ -78,11 +78,11 @@ void get_signal(int i)
 		sig_cont();
 	else if (i == SIGTSTP)
 		sig_stop();
-	else if (i == SIGWINCH)
-		sig_size();
+	// else if (i == SIGWINCH)
+	// 	sig_size();
 	else
     {
-	    tm = tm_stock(tm, 1);
+	    // tm = tm_stock(tm, 1);
 	    tm_endtm(tm);
 	    exit(0);
     }
@@ -95,7 +95,7 @@ void tm_signal(void)
 	i = 1;
 	while (i < 32)
 	{
-		signal(i, get_signal;
+		signal(i, get_signal);
 		i++;
 	}
 }

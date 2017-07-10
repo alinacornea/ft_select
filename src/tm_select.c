@@ -12,9 +12,9 @@
 
 #include "ft_select.h"
 
-t_list *init_list()
+t_lsarg *init_list()
 {
-  t_list *tmp;
+  t_lsarg *tmp;
 
   tmp = ft_memalloc(sizeof(t_list));
   tmp->arg = NULL;
@@ -26,19 +26,19 @@ t_list *init_list()
   return (tmp);
 }
 
-t_list *fill_list(char *str)
+t_lsarg *fill_list(char *str)
 {
-  t_list *ls;
+  t_lsarg *ls;
 
   ls = init_list();
   ls->arg = ft_strdup(str);
-  ls->len = ft_strlen(ls->str);
+  ls->len = ft_strlen(ls->arg);
   return (ls);
 }
 
-void push_list(t_select *tm, t_list *ls)
+void push_list(t_select *tm, t_lsarg *ls)
 {
-  t_list *tmp;
+  t_lsarg *tmp;
 
   if (tm->ls == NULL)
   {
@@ -58,7 +58,7 @@ void push_list(t_select *tm, t_list *ls)
 void parse_arg(char **argv, t_select *tm)
 {
 	int i;
-	t_lst *tmp;
+	t_lsarg *tmp;
 
 	i = 1;
 	while (argv[i])

@@ -21,6 +21,7 @@
 # include "libft.h"
 # include <sys/ioctl.h>
 
+# define LINE 0
 # define TERM_BUF 2048
 # define KEY_ASCII(c)	(c)
 # define KEY_ESC		27
@@ -32,6 +33,7 @@
 # define KEY_DOWN		4348699
 # define KEY_CTRL_A		1
 # define KEY_SPACE    32
+# define buffer 2048
 # define BUFFER *(unsigned int *)buffer
 /*
 ID meaning:
@@ -45,16 +47,16 @@ te finish ti
 is initialize the terminal for each login session
 */
 
-typedef struct s_list
+typedef struct s_lsarg
 {
   char *arg;
   int len;
   int select;
   int line;
-  struct s_list *next;
-  struct s_list *prev;
+  struct s_lsarg *next;
+  struct s_lsarg *prev;
 
-} t_list;
+} t_lsarg;
 
 typedef struct s_select
 {
@@ -63,18 +65,23 @@ typedef struct s_select
     // char *term;
     int col;
     int row;
+    int count[2];
     int select;
-    t_list *list;
+    t_lsarg *ls;
 
 
 }              t_select;
 
-
+t_select  *tm_stock(t_select *tm, int i);
 int     pputchar(int c);
-void    get_signal(int i);
+void    tm_signal(void);
 void    tm_clear(void);
-void parse_arg(char **argv, t_select *tm);
-void tm_endtm(t_select *tm);
-int tm_keyhook(t_select *tm);
+int     tm_keyhook(t_select *tm);
+void    print_list(t_select *tm);
+void    parse_arg(char **argv, t_select *tm);
+void    tm_endtm(t_select *tm);
+int     check_size(t_select *tm);
+void    re_size(void);
+void get_signal(int i);
 
 #endif

@@ -31,6 +31,7 @@ OBJ_NAME = $(SRC_NAME:.c=.o)
 SRC_NAME = main.c \
 					tm_endtm.c \
 					tm_keyhook.c \
+					tm_select.c \
 					tm_move.c \
 					tm_print.c \
 					tm_signal.c \

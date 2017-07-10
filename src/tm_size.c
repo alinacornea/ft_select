@@ -12,9 +12,10 @@
 
 #include "ft_select.h"
 
-tm *tm_stok(t_select *tm, int i);
+t_select *tm_stok(t_select *tm, int i)
 {
   static t_select *tmp = NULL;
+
   if (i == 0)
     tmp = tm;
   return (tmp);
@@ -30,7 +31,7 @@ int check_size(t_select *tm)
   }
   else{
     tm_clear();
-    tm_print(tm);
+    print_list(tm);
   }
   return (1);
 }
@@ -38,7 +39,10 @@ int check_size(t_select *tm)
 void re_size(void)
 {
   t_select *tm;
-  tm = ft_stock(tm, 1);
+  struct winsize win;
+
+  tm = NULL;
+  // tm = tm_stock(tm, 1);
   tm_clear();
   ioctl(0, TIOCGWINSZ, &win);
   tm->col = win.ws_col;

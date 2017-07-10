@@ -10,3 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_select.h"
+
+void print_list(t_select *tm)
+{
+  ft_putstr(tm->ls->arg);
+}
