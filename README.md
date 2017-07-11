@@ -10,4 +10,13 @@
 
 #### The _tgoto()_ function instantiates the parameters col and row into the capability cap and returns a pointer to the resulting <br /> string.
 
-
+### **Setting terminal in noncanonical mode:**
+  1. Look up the description of the terminal type in use, using tgetent() and tgetent();<br />
+  2. Get the parrameters (key pressed immediately by the user) using tcgetattr()<br />
+  3. Setting the terminal into nonconincal mode, allows to set how many characters should be read<br />
+    before input is given to the program. (&= ~ICANON) unset a flag using bit mask operation;<br />
+    ICANON - "line editing" mode, terminal buffers line at a time;<br />
+    ECHO - controls wheter input is immediately re-echoed as output;<br />
+  4. Set buffer size to 1 byte and time wait to 0 sec, (VMIN, VTIME)<br />
+  5. Set the attributes of the terminal making change immediately;<br />
+  6. Extract information we will use using tgetstr(), tputs();<br />
