@@ -28,21 +28,23 @@ INC = $(addprefix -I ,$(INC_PATH))
 INC_LFT = $(addprefix -I ,$(addprefix $(LIBFT_PATH), $(INC_PATH)))
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
-SRC_NAME = main.c \
-					tm_endtm.c \
-					tm_keyhook.c \
-					tm_select.c \
-					tm_move.c \
-					tm_print.c \
-					tm_signal.c \
-					tm_size.c \
+SRC_NAME = ft_select.c ft_print.c ft_keyhook.c
+						# main.c \
+# 					tm_endtm.c \
+# 					tm_keyhook.c \
+# 					tm_select.c \
+# 					tm_move.c \
+# 					tm_print.c \
+# 					tm_signal.c \
+# 					tm_size.c \
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	make -C $(LIBFT_PATH)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -L$(LIBFT_PATH) -lft -ltermcap
-	echo "\\033[1;34m$(NAME) has been created!\n\\033[0;39m\\033[1;31mRun: ./ft_select [arg1] [arg2] ...\\033[0;39m"
+
+	@echo "\033[1;32m$(NAME) has been created!\n\\033[0;39m\\033[1;31mRun: ./ft_select [arg1] [arg2] ...\\033[0;39m"
 
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c

@@ -19,11 +19,10 @@
 # include <termcap.h>
 # include <term.h>
 # include "libft.h"
+# include "colors.h"
 # include <sys/ioctl.h>
 
 # define LINE 0
-# define TERM_BUF 2048
-# define KEY_ASCII(c)	(c)
 # define KEY_ESC		27
 # define KEY_BACK		127
 # define KEY_END 4610843
@@ -35,8 +34,7 @@
 # define KEY_CTRL_A		1
 # define KEY_SPACE    32
 # define KEY_TAB 9
-# define buffer 2048
-# define BUFFER *(unsigned int *)buffer
+# define INPUT *(unsigned int *)buff
 /*
 ID meaning:
 vs enhance the cursor
@@ -51,7 +49,7 @@ is initialize the terminal for each login session
 
 typedef struct s_lsarg
 {
-  char *arg;
+  char *name;
   int len;
   int select;
   int line;
@@ -63,29 +61,21 @@ typedef struct s_lsarg
 typedef struct s_select
 {
     struct termios term;
-    char          *name;
     char **ret_tab;
+    int count[2];
     int col;
     int row;
-    int count[2];
     int enter;
-    t_lsarg *ls;
+    size_t max_len;
+    int height;
+    int width;
+    struct s_lsarg *begin;
 
 
 }              t_select;
 
-t_select  *tm_stock(t_select *tm, int i);
-int     pputchar(int c);
-void    tm_signal(void);
-void    tm_clear(void);
-int     tm_keyhook(t_select *tm);
-void    print_list(t_select *tm);
-void    parse_arg(char **argv, t_select *tm);
-void    tm_endtm(t_select *tm);
-int     check_size(t_select *tm);
-void    re_size(void);
-void get_signal(int i);
-void move_up(t_select *tm);
-void move_down(t_select *tm);
+void tm_printlist(t_select *arg);
+int tm_keyhook(t_select *arg);
+int pputchar(int c);
 
 #endif
