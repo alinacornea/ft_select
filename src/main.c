@@ -23,7 +23,6 @@ int pputchar(int c)
 {
 	return (write(2, &c, 1));
 }
-
 /*
 ** Setting terminal (noncanonical mode):
 **
@@ -40,6 +39,7 @@ int pputchar(int c)
 
 int tm_set_terminal(t_select *arg)
 {
+	struct winsize win;
 
   if ((tgetent(NULL, getenv("TERM"))) < 1)
     printf("Specify a terminal type with `setenv TERM <yourtype>'.\n");
@@ -48,9 +48,13 @@ int tm_set_terminal(t_select *arg)
   arg->term.c_lflag &= ~(ICANON | ECHO);
   arg->term.c_cc[VMIN] = 1;
   arg->term.c_cc[VTIME] = 0;
-  arg->height = tgetnum("li");
-  arg->width = tgetnum("co");
-  printf("%d %d\n", arg->height, arg->width);
+	ioctl(0, TIOCGWINSZ, &win);
+  arg->height= win.ws_row;
+  arg->width = win.ws_col;
+	printf("%d %d\n", arg->height, arg->width);
+  // arg->height = tgetnum("li");
+  // arg->width = tgetnum("co");
+  // printf("%d %d\n", arg->height, arg->width);
   if ((tcsetattr(0, 0, &(arg->term))) == -1)
     return (0);
   tputs(tgetstr("ti", NULL), 1, pputchar);
@@ -81,18 +85,19 @@ int main(int argc, char **argv)
   t_select *arg = NULL;
 
   arg = ft_memalloc(sizeof(t_select));
-  arg->mod = 0;
+	arg->mod = NULL;
   if (argc < 2)
     printf("Usage: ./ft_select [arg1] [arg2] [arg3] ...\n");
-  // tm_signal();
   if (!tm_set_terminal(arg))
     printf("Setting terminal failed\n");
+	// tm_signal();
   if (argc >=2)
   {
     tputs(tgetstr("cl", NULL), 1, pputchar);
     tm_makelist(argv, arg);
     tm_printlist(arg);
-		arg->mod = 1;
+		check_size_window(arg);
+		arg->mod = arg;
     while (1)
     {
       if(!tm_keyhook(arg))

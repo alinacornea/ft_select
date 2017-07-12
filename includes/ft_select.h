@@ -53,7 +53,7 @@ typedef struct s_lsarg
   char *name;
   int name_len;
   int select;
-  int line;
+  int cursor;
   struct s_lsarg *next;
   struct s_lsarg *prev;
 
@@ -68,7 +68,7 @@ typedef struct s_select
     size_t max_len;
     int height;
     int width;
-    int mod;
+    struct s_select *mod;
     struct s_lsarg *begin;
 }              t_select;
 
@@ -80,6 +80,9 @@ void		get_signal(int i);
 int     pputchar(int c);
 void    free_list(t_select *arg);
 void	  print_return(t_select *arg);
+void    resize_window(void);
+int     check_size_window(t_select *arg);
+
 
 void    tm_end_session(t_select *arg);
 

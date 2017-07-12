@@ -26,7 +26,7 @@ t_lsarg *tm_init_list(void)
   tmp = (t_lsarg *)malloc(sizeof(t_lsarg));
   tmp->name = NULL;
   tmp->select = 0;
-  tmp->line = 0;
+  tmp->cursor = 0;
   tmp->name_len = 0;
   tmp->next = NULL;
   tmp->prev = NULL;
@@ -46,7 +46,7 @@ void create_list(t_select *arg, t_lsarg *ls)
     ls->prev = ls;
     ls->next = ls;
     arg->begin = ls;
-    ls->line = 1;
+    ls->cursor = 1;
   }
   else
 	{

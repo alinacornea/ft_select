@@ -14,8 +14,8 @@
 
 void get_selected(t_select *arg, int count)
 {
+    int     i;
     t_lsarg *tmp;
-    int i;
 
     i = 0;
     tmp = NULL;
@@ -40,8 +40,8 @@ void get_selected(t_select *arg, int count)
 
 void return_key(t_select *arg)
 {
+    int     count;
     t_lsarg *tmp;
-    int count;
 
     count = 0;
     arg->enter = 1;
@@ -62,10 +62,10 @@ void position_cursor(t_select *arg, char *buff)
   t_lsarg *tmp;
 
   tmp = arg->begin;
-  while(tmp->line != 1)
+  while(tmp->cursor != 1)
     tmp = tmp->next;
-  tmp->line = 0;
-  (INPUT == KEY_HOME) ? (arg->begin->line = 1) : (arg->begin->prev->line = 1);
+  tmp->cursor = 0;
+  (INPUT == KEY_HOME) ? (arg->begin->cursor = 1) : (arg->begin->prev->cursor = 1);
 }
 
 void select_space(t_select *arg)
@@ -73,11 +73,11 @@ void select_space(t_select *arg)
   t_lsarg *tmp;
 
   tmp = arg->begin;
-  while (tmp->line != 1)
+  while (tmp->cursor != 1)
     tmp = tmp->next;
   (tmp->select == 0) ? (tmp->select = 1) : (tmp->select = 0);
-  tmp->line = 0;
-  tmp->next->line = 1;
+  tmp->cursor = 0;
+  tmp->next->cursor = 1;
 }
 
 void arrow_up_down(t_select *arg, char *buff)
@@ -85,14 +85,15 @@ void arrow_up_down(t_select *arg, char *buff)
   t_lsarg *tmp;
 
   tmp = arg->begin;
-  while (tmp->line != 1)
+  while (tmp->cursor != 1)
     tmp = tmp->next;
-  tmp->line = 0;
-  (INPUT == KEY_UP) ? (tmp->prev->line = 1) : (tmp->next->line = 1);
+  tmp->cursor = 0;
+  (INPUT == KEY_UP) ? (tmp->prev->cursor = 1) : (tmp->next->cursor = 1);
 }
 
 /*
 ** delete_key()
+** checking if there is only one argument in the list
 ** next argument will be setup as previous and previos as first in order to delete_key
 ** line by line and than exit if there are no more arguments;
 ** count_line will decrease;
@@ -108,16 +109,16 @@ int delete_key(t_select *arg)
     return (0);
   }
   tmp = arg->begin;
-  if (arg->begin->line == 1)
+  if (arg->begin->cursor == 1)
     arg->begin = tmp->next;
   else
   {
-    while (tmp->line != 1)
+    while (tmp->cursor != 1)
       tmp = tmp->next;
   }
   tmp->prev->next = tmp->next;
   tmp->next->prev = tmp->prev;
-  tmp->next->line = 1;
+  (tmp->next != arg->begin) ? (tmp->next->cursor = 1) : (tmp->prev->cursor = 1);
   free(tmp->name);
   free(tmp);
   arg->count_lines--;

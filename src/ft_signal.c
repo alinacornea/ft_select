@@ -14,10 +14,11 @@
   Signal are sofware interrups, ctrl+c process is sending  s signal to kill the process
   SIGCONT continue if stopped
   SIGSTOP stop process
-  SIGTSTP stop typed at terminal
-  SIGINT interrupt from keyboard
+  SIGTSTP stop typed at terminal (VSUSP, default ctrl-Z, backgroung bg, foreground fg)
+  SIGINT interrupt from keyboard (VINTR, default ctrl-C)
   SIGTERM termination signal
   SIGWINCH window resize
+	SIGQUIT (VQUIT, default ctrl-\)
 */
 //
 #include "ft_select.h"
@@ -62,12 +63,13 @@ void			get_signal(int i)
 	t_select *arg;
 
 	arg = NULL;
+	arg = arg->mod;
 	if (i == SIGCONT)
 		sig_cont();
 	else if (i == SIGTSTP) //control z
 		sig_stop();
-	// else if (i == SIGWINCH)
-	// 	resize();
+	else if (i == SIGWINCH)
+		resize_window();
 	else
 	{
 	  tm_end_session(arg);
