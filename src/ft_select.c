@@ -1,12 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_select.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alcornea <alcornea@student.42.us.org>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/07/07 14:38:23 by alcornea          #+#    #+#             */
+/*   Updated: 2017/07/08 13:49:32 by alcornea         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_select.h"
-/*
-  NOTE: In order to search termcap library, compile ussing "-ltermcap" or "-ltermlib"
-*/
 
-
-int pputchar(int c)
+void free_list(t_select *arg)
 {
-	return (write(2, &c, 1));
+	arg->begin->name ? free(arg->begin->name) : (0);
+	arg->ret_tab ? ft_strdel(arg->ret_tab) : (0);
+
 }
 
 t_lsarg *tm_init_list(void)
@@ -17,64 +27,17 @@ t_lsarg *tm_init_list(void)
   tmp->name = NULL;
   tmp->select = 0;
   tmp->line = 0;
-  tmp->len = 0;
+  tmp->name_len = 0;
   tmp->next = NULL;
   tmp->prev = NULL;
   return (tmp);
 }
 
 /*
-  Setting terminal (noncanonical mode):
-  1.Look up the description of the terminal type in use, using tgetent() and tgetent()
-  2.Get the parrameters (key pressed immediately by the user) using tcgetattr()
-  3.Setting the terminal into nonconincal mode, allows to set how many characters should be read
-    before input is given to the program. (&= ~ICANON) unset a flag using bit mask operation;
-    ICANON - "line editing" mode, terminal buffers line at a time;
-    ECHO - controls wheter input is immediately re-echoed as output;
-  4.Set buffer size to 1 byte and time wait to 0 sec, (VMIN, VTIME)
-  5.Set the attributes of the terminal making change immediately;
-  6.Extract information we will use using tgetstr(), tputs();
+
 */
 
-int tm_set_terminal(t_select *arg)
-{
-
-  if ((tgetent(NULL, getenv("TERM"))) < 1)
-    printf("Specify a terminal type with `setenv TERM <yourtype>'.\n");
-  if ((tcgetattr(0, &(arg->term))) == -1)
-    return (0);
-  arg->term.c_lflag &= ~(ICANON | ECHO);
-  arg->term.c_cc[VMIN] = 1;
-  arg->term.c_cc[VTIME] = 0;
-  arg->height = tgetnum("li");
-  arg->width = tgetnum("co");
-  printf("%d %d\n", arg->height, arg->width);
-  if ((tcsetattr(0, 0, &(arg->term))) == -1)
-    return (0);
-  tputs(tgetstr("ti", NULL), 1, pputchar);
-  tputs(tgetstr("vi", NULL), 1, pputchar);
-  return(1);
-}
-
-void	print_return(t_select *arg)
-{
-	int		i;
-
-	i = 0;
-	while (arg->ret_tab[i])
-	{
-		ft_putstr(arg->ret_tab[i]);
-		if (arg->ret_tab[i + 1])
-			ft_putchar(32);
-		i++;
-	}
-}
-
-/*
-  create the list of the arguments
-*/
-
-void push_list(t_select *arg, t_lsarg *ls)
+void create_list(t_select *arg, t_lsarg *ls)
 {
   t_lsarg *tmp;
 
@@ -85,7 +48,8 @@ void push_list(t_select *arg, t_lsarg *ls)
     arg->begin = ls;
     ls->line = 1;
   }
-  else{
+  else
+	{
     tmp = arg->begin->prev;
     tmp->next = ls;
     ls->next = arg->begin;
@@ -93,53 +57,27 @@ void push_list(t_select *arg, t_lsarg *ls)
     arg->begin->prev = ls;
   }
 }
+
+/*
+** tm_makelist() will create the list based on the arguments introduced
+** using the t_select and t_lasarg structs;
+** rows-counting the number of lines made;
+** name-len will be using in order to find out the window size;
+*/
+
 void tm_makelist(char **argv, t_select *arg)
 {
-  int i;
-  t_lsarg *tmp;
+  int 		rows;
+  t_lsarg	*tmp;
 
-  i = 1;
-  while (argv[i])
+  rows = 1;
+  while (argv[rows])
   {
     tmp = tm_init_list();
-    tmp->name = ft_strdup(argv[i]);
-    tmp->len = ft_strlen(tmp->name);
-    push_list(arg, tmp);
-    i++;
+    tmp->name = ft_strdup(argv[rows]);
+    tmp->name_len = ft_strlen(tmp->name);
+    create_list(arg, tmp);
+    rows++;
   }
-  arg->count[LINE] = i;
-}
-
-int main(int argc, char **argv)
-{
-  t_select *arg = NULL;
-
-  arg = ft_memalloc(sizeof(t_select));
-  if (argc < 2)
-    printf("Usage: ./ft_select [arg1] [arg2] [arg3] ...");
-  // tm_signal();
-  if (!tm_set_terminal(arg))
-    printf("Setting terminal failed\n");
-  if (argc >=2)
-  {
-    tputs(tgetstr("cl", NULL), 1, pputchar);
-    tm_makelist(argv, arg);
-    tm_printlist(arg);
-    while (1)
-    {
-      if(!tm_keyhook(arg))
-        break;
-    }
-  }
-  /*tm_end_session();
-  "ve" -return cursor to normal;
-  "te" - output the string when exit, finish "ti"
-  */
-  arg->term.c_lflag |= (ICANON | ECHO); // | return 1 all the time except when 0, 0
-  tcsetattr(0, 0, &(arg->term));
-  tputs(tgetstr("te", NULL), 1, pputchar);
-  tputs(tgetstr("ve", NULL), 1, pputchar);
-  if(arg->ret_tab)
-   print_return(arg);
-  return (0);
+  arg->count_lines = rows;
 }

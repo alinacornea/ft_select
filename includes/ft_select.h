@@ -20,9 +20,9 @@
 # include <term.h>
 # include "libft.h"
 # include "colors.h"
+# include <signal.h>
 # include <sys/ioctl.h>
 
-# define LINE 0
 # define KEY_ESC		27
 # define KEY_BACK		127
 # define KEY_END 4610843
@@ -35,6 +35,7 @@
 # define KEY_SPACE    32
 # define KEY_TAB 9
 # define INPUT *(unsigned int *)buff
+
 /*
 ID meaning:
 vs enhance the cursor
@@ -50,7 +51,7 @@ is initialize the terminal for each login session
 typedef struct s_lsarg
 {
   char *name;
-  int len;
+  int name_len;
   int select;
   int line;
   struct s_lsarg *next;
@@ -62,20 +63,24 @@ typedef struct s_select
 {
     struct termios term;
     char **ret_tab;
-    int count[2];
-    int col;
-    int row;
+    int count_lines;
     int enter;
     size_t max_len;
     int height;
     int width;
+    int mod;
     struct s_lsarg *begin;
-
-
 }              t_select;
 
-void tm_printlist(t_select *arg);
-int tm_keyhook(t_select *arg);
-int pputchar(int c);
+void    tm_printlist(t_select *arg);
+int     tm_keyhook(t_select *arg);
+void    tm_makelist(char **argv, t_select *arg);
+void    tm_signal(void);
+void		get_signal(int i);
+int     pputchar(int c);
+void    free_list(t_select *arg);
+void	  print_return(t_select *arg);
+
+void    tm_end_session(t_select *arg);
 
 #endif

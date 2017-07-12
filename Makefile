@@ -28,15 +28,12 @@ INC = $(addprefix -I ,$(INC_PATH))
 INC_LFT = $(addprefix -I ,$(addprefix $(LIBFT_PATH), $(INC_PATH)))
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
-SRC_NAME = ft_select.c ft_print.c ft_keyhook.c
-						# main.c \
-# 					tm_endtm.c \
-# 					tm_keyhook.c \
-# 					tm_select.c \
-# 					tm_move.c \
-# 					tm_print.c \
-# 					tm_signal.c \
-# 					tm_size.c \
+SRC_NAME = main.c \
+					ft_select.c \
+					ft_print.c \
+					ft_keyhook.c \
+					ft_signal.c \
+					ft_window.c
 
 all: $(NAME)
 
