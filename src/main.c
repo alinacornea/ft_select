@@ -79,7 +79,6 @@ int main(int argc, char **argv)
 
 	tm_signal();
   arg = get_info();
-	arg->mod = 0;
   if (argc < 2)
     ft_printf("Usage: ./ft_select [arg1] [arg2] [arg3] ...\n");
   if (!tm_set_terminal(arg))
@@ -90,7 +89,6 @@ int main(int argc, char **argv)
     tm_makelist(argv, arg);
     tm_printlist(arg);
 		check_size_window(arg);
-		arg->mod = 1;
     while (1)
     {
       if(!tm_keyhook(arg))
