@@ -16,7 +16,7 @@ t_lsarg *tm_init_list(void)
 {
   t_lsarg *tmp;
 
-  tmp = (t_lsarg *)malloc(sizeof(t_lsarg));
+  tmp = ft_memalloc(sizeof(t_lsarg));
   tmp->name = NULL;
   tmp->select = 0;
   tmp->cursor = 0;

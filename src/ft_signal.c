@@ -48,7 +48,7 @@ static	void	sig_stop(void)
 	tcsetattr(0, 0, &(arg->term));
 	tputs(tgetstr("te", NULL), 1, pputchar);
 	tputs(tgetstr("ve", NULL), 1, pputchar);
-	// ioctl(0, TIOCSTI, cp);
+	ioctl(0, TIOCSTI, cp);
 }
 
 static void		sig_cont(void)
@@ -63,8 +63,8 @@ static void		sig_cont(void)
 	tputs(tgetstr("ti", NULL), 1, pputchar);
 	tputs(tgetstr("vi", NULL), 1, pputchar);
 	signal(SIGTSTP, get_signal);
-	// resize_window();
-	// check_size_window(arg);
+	resize_window();
+	check_size_window(arg);
 }
 
 void			get_signal(int i)
@@ -76,8 +76,8 @@ void			get_signal(int i)
 		sig_cont();
 	else if (i == SIGTSTP)
 		sig_stop();
-	// else if (i == SIGWINCH)
-	// 	resize_window();
+	else if (i == SIGWINCH)
+		resize_window();
 	else
 	{
 		tputs(tgetstr("cl", NULL), 1, pputchar);

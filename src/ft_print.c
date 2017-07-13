@@ -23,18 +23,18 @@ ue - off underline mode
 static void select_format(t_lsarg *list)
 {
   if (list->cursor == 1 && list->select == 1)
-    ft_printf("%s%s%s\n", C_YELLOW, list->name, C_RES);
+    ft_printf(C_RED"%s\n"C_RES, list->name);
   else if (list->cursor == 1)
   {
   	tputs(tgetstr("us", NULL), 1, pputchar);
-    ft_printf("%s%s%s\n", C_YELLOW, list->name, C_RES);
+    ft_printf(C_YELLOW"%s\n"C_RES, list->name);
   	tputs(tgetstr("ue", NULL), 1, pputchar);
   }
   else if (list->select == 1)
   {
     tputs(tgetstr("so", NULL), 1, pputchar);
-    ft_printf("%s%s%s\n", C_YELLOW, list->name, C_RES);
-  	tputs(tgetstr("se", NULL), 1, pputchar);
+    ft_printf(C_YELLOW"%s\n"C_RES, list->name);
+    tputs(tgetstr("se", NULL), 1, pputchar);
   }
   else
     ft_printf("%s\n", list->name);
@@ -43,11 +43,16 @@ static void select_format(t_lsarg *list)
 void	print_return(t_select *arg)
 {
 	int		i;
+  int   count;
 
 	i = 0;
+  count = 0;
+  while (arg->ret_tab[count])
+    count++;
 	while (arg->ret_tab[i])
 	{
-    ft_printf("%s\n", arg->ret_tab[i]);
+    (i < count - 1) ? ft_printf(BOLD"%s ", arg->ret_tab[i]) :
+    (ft_printf("%s\n", arg->ret_tab[i]));
     ft_strdel(&arg->ret_tab[i]);
 		i++;
 	}

@@ -12,7 +12,7 @@
 
 #include "ft_select.h"
 
-void position_cursor(t_select *arg, char *buff)
+static void position_cursor(t_select *arg, char *buff)
 {
   t_lsarg *tmp;
 
@@ -23,7 +23,22 @@ void position_cursor(t_select *arg, char *buff)
   (INPUT == KEY_HOME) ? (arg->begin->cursor = 1) : (arg->begin->prev->cursor = 1);
 }
 
-void select_space(t_select *arg)
+static void select_all(t_select *arg)
+{
+    t_lsarg	*tmp;
+
+    if (arg->begin->select == 0)
+      arg->begin->select = 1;
+    tmp = arg->begin->next;
+    while (tmp != arg->begin)
+    {
+      if (tmp->select == 0)
+        tmp->select = 1;
+      tmp = tmp->next;
+    }
+}
+
+static void select_space(t_select *arg)
 {
   t_lsarg *tmp;
 
@@ -35,7 +50,7 @@ void select_space(t_select *arg)
   tmp->next->cursor = 1;
 }
 
-void arrow_up_down(t_select *arg, char *buff)
+static void arrow_up_down(t_select *arg, char *buff)
 {
   t_lsarg *tmp;
 
@@ -54,7 +69,7 @@ void arrow_up_down(t_select *arg, char *buff)
 ** count_line will decrease;
 */
 
-int delete_key(t_select *arg)
+static int delete_key(t_select *arg)
 {
   t_lsarg *tmp;
 
@@ -95,6 +110,7 @@ int tm_keyhook(t_select *arg)
   (INPUT == KEY_UP || INPUT == KEY_DOWN) ? arrow_up_down(arg, buff) : (0);
   (INPUT == KEY_SPACE) ? select_space(arg) : (0);
   (INPUT == KEY_HOME || INPUT == KEY_END) ? position_cursor(arg, buff) : (0);
+  (INPUT == KEY_CTRL_A) ? (select_all(arg)) : (0);
   if (INPUT == KEY_DELETE || INPUT == KEY_BACK)
   {
     if (!delete_key(arg))
@@ -106,6 +122,6 @@ int tm_keyhook(t_select *arg)
     return (0);
   }
   tputs(tgetstr("cl", NULL), 1, pputchar);
-  tm_printlist(arg);
+  check_size_window(arg);
   return (1);
 }

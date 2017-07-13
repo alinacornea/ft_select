@@ -33,5 +33,6 @@
 # define CLU_MAGENTA	"\033[0;45m"
 # define CLU_CYAN		"\033[0;46m"
 # define CLU_WHITE		"\033[0;47m"
+# define BOLD         "\033[1m]"
 
 #endif
