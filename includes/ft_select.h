@@ -48,41 +48,40 @@ te finish ti
 is initialize the terminal for each login session
 */
 
-typedef struct s_lsarg
+typedef struct    s_lsarg
 {
-  char *name;
-  int name_len;
-  int select;
-  int cursor;
-  struct s_lsarg *next;
-  struct s_lsarg *prev;
+  char            *name;
+  int             name_len;
+  int             select;
+  int             cursor;
+  struct s_lsarg  *next;
+  struct s_lsarg  *prev;
 
-} t_lsarg;
+}                 t_lsarg;
 
-typedef struct s_select
+typedef struct      s_select
 {
-    struct termios term;
-    char **ret_tab;
-    int count_lines;
-    int enter;
-    size_t max_len;
-    int height;
-    int width;
-    struct s_select *mod;
-    struct s_lsarg *begin;
-}              t_select;
+    struct termios  term;
+    char            **ret_tab;
+    int             count_lines;
+    int             enter;
+    size_t          max_len;
+    int             height;
+    int             width;
+    struct s_lsarg  *begin;
+}                   t_select;
 
-void    tm_printlist(t_select *arg);
-int     tm_keyhook(t_select *arg);
-void    tm_makelist(char **argv, t_select *arg);
-void    tm_signal(void);
-void		get_signal(int i);
-int     pputchar(int c);
-void    free_list(t_select *arg);
-void	  print_return(t_select *arg);
-void    resize_window(void);
-int     check_size_window(t_select *arg);
-
+void      tm_printlist(t_select *arg);
+int       tm_keyhook(t_select *arg);
+void      tm_makelist(char **argv, t_select *arg);
+void      tm_signal(void);
+void		  get_signal(int i);
+void      return_key(t_select *arg);
+int       pputchar(int c);
+void	    print_return(t_select *arg);
+void      resize_window(void);
+int       check_size_window(t_select *arg);
+t_select  *get_info(void);
 
 void    tm_end_session(t_select *arg);
 

@@ -11,18 +11,16 @@
 /* ************************************************************************** */
 
 #include "ft_select.h"
+
 /*
   NOTE: In order to search termcap library, compile ussing "-ltermcap" or "-ltermlib"
 */
 
-/*
-** pputchar function takes 2 bit for the id in function tputs;
-*/
-
 int pputchar(int c)
 {
-	return (write(2, &c, 1));
+	return (write(1, &c, 1));
 }
+
 /*
 ** Setting terminal (noncanonical mode):
 **
@@ -51,10 +49,6 @@ int tm_set_terminal(t_select *arg)
 	ioctl(0, TIOCGWINSZ, &win);
   arg->height= win.ws_row;
   arg->width = win.ws_col;
-	printf("%d %d\n", arg->height, arg->width);
-  // arg->height = tgetnum("li");
-  // arg->width = tgetnum("co");
-  // printf("%d %d\n", arg->height, arg->width);
   if ((tcsetattr(0, 0, &(arg->term))) == -1)
     return (0);
   tputs(tgetstr("ti", NULL), 1, pputchar);
@@ -77,27 +71,26 @@ void tm_end_session(t_select *arg)
 	tputs(tgetstr("te", NULL), 1, pputchar);
 	tputs(tgetstr("ve", NULL), 1, pputchar);
 	(arg->ret_tab) ?	print_return(arg) : (0);
-	(arg->mod) ? free_list(arg) : (0);
 }
 
 int main(int argc, char **argv)
 {
-  t_select *arg = NULL;
+  t_select *arg;
 
-  arg = ft_memalloc(sizeof(t_select));
-	arg->mod = NULL;
+	tm_signal();
+  arg = get_info();
+	arg->mod = 0;
   if (argc < 2)
-    printf("Usage: ./ft_select [arg1] [arg2] [arg3] ...\n");
+    ft_printf("Usage: ./ft_select [arg1] [arg2] [arg3] ...\n");
   if (!tm_set_terminal(arg))
-    printf("Setting terminal failed\n");
-	// tm_signal();
+    ft_printf("Setting terminal failed\n");
   if (argc >=2)
   {
     tputs(tgetstr("cl", NULL), 1, pputchar);
     tm_makelist(argv, arg);
     tm_printlist(arg);
 		check_size_window(arg);
-		arg->mod = arg;
+		arg->mod = 1;
     while (1)
     {
       if(!tm_keyhook(arg))

@@ -32,8 +32,8 @@ SRC_NAME = main.c \
 					ft_select.c \
 					ft_print.c \
 					ft_keyhook.c \
+					ft_window.c \
 					ft_signal.c \
-					ft_window.c
 
 all: $(NAME)
 

@@ -12,51 +12,6 @@
 
 #include "ft_select.h"
 
-void get_selected(t_select *arg, int count)
-{
-    int     i;
-    t_lsarg *tmp;
-
-    i = 0;
-    tmp = NULL;
-    arg->ret_tab = (char **)malloc(sizeof(char*) * (count + 1));
-    if (arg->begin->select == 1)
-    {
-      arg->ret_tab[i] = ft_strdup(arg->begin->name);
-      i++;
-    }
-    tmp = arg->begin->next;
-    while (tmp != arg->begin)
-    {
-      if (tmp->select == 1)
-      {
-        arg->ret_tab[i] = ft_strdup(tmp->name);
-        i++;
-      }
-      tmp = tmp->next;
-    }
-    arg->ret_tab[i] = 0;
-}
-
-void return_key(t_select *arg)
-{
-    int     count;
-    t_lsarg *tmp;
-
-    count = 0;
-    arg->enter = 1;
-    if (arg->begin->select == 1)
-      count++;
-    tmp = arg->begin->next;
-    while (tmp != arg->begin)
-    {
-      if (tmp->select == 1)
-        count++;
-      tmp = tmp->next;
-    }
-    get_selected(arg, count);
-}
-
 void position_cursor(t_select *arg, char *buff)
 {
   t_lsarg *tmp;

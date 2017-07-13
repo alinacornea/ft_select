@@ -10,29 +10,39 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-  Signal are sofware interrups, ctrl+c process is sending  s signal to kill the process
-  SIGCONT continue if stopped
-  SIGSTOP stop process
-  SIGTSTP stop typed at terminal (VSUSP, default ctrl-Z, backgroung bg, foreground fg)
-  SIGINT interrupt from keyboard (VINTR, default ctrl-C)
-  SIGTERM termination signal
-  SIGWINCH window resize
-	SIGQUIT (VQUIT, default ctrl-\)
-*/
-//
 #include "ft_select.h"
+
+/*
+**  SIGCONT continue if stopped
+**  SIGSTOP stop process
+**  SIGTSTP suspend process (VSUSP, default ctrl-Z, value 18)
+**  SIGINT interrupt from keyboard (VINTR, default ctrl-C)
+**  SIGTERM termination signal
+**  SIGWINCH window resize
+**	SIGQUIT (VQUIT, default ctrl-\, value 3)
+**	SIGKILL kill the process (value 9)
+** 	TIOCSTI Insert the given byte in the input queue.
+**	VSUSP suspending the characters
+*/
+
+t_select *get_info(void)
+{
+	static t_select *arg;
+
+	if (arg == NULL)
+		arg = ft_memalloc(sizeof(t_select));
+	return (arg);
+}
 
 static	void	sig_stop(void)
 {
-	t_select	*arg;
+	t_select	*arg = NULL;
 	char	cp[2];
 
-	arg = NULL;
+	arg = get_info();
 	cp[0] = arg->term.c_cc[VSUSP];
 	cp[1] = 0;
-  arg->mod = 0;
-	arg->term.c_lflag |= (ICANON | ECHO); //set icanon anfd echo back
+	arg->term.c_lflag |= (ICANON | ECHO); //set icanon and echo back
 	signal(SIGTSTP, SIG_DFL);
 	tputs(tgetstr("cl", NULL), 1, pputchar);
 	tcsetattr(0, 0, &(arg->term));
@@ -43,77 +53,46 @@ static	void	sig_stop(void)
 
 static void		sig_cont(void)
 {
-	t_select *arg;
+	t_select *arg = NULL;
 
-	arg = NULL;
+	arg = get_info();
 	arg->term.c_lflag &= ~(ICANON | ECHO);
 	arg->term.c_cc[VMIN] = 1;
 	arg->term.c_cc[VTIME] = 0;
-  arg->mod = 0;
 	tcsetattr(0, 0, &(arg->term));
 	tputs(tgetstr("ti", NULL), 1, pputchar);
 	tputs(tgetstr("vi", NULL), 1, pputchar);
 	signal(SIGTSTP, get_signal);
-	// resize();
-	// ft_check_size(arg);
+	resize_window();
+	check_size_window(arg);
 }
 
 void			get_signal(int i)
 {
 	t_select *arg;
 
-	arg = NULL;
-	arg = arg->mod;
+	arg = get_info();
 	if (i == SIGCONT)
 		sig_cont();
-	else if (i == SIGTSTP) //control z
+	else if (i == SIGTSTP)
 		sig_stop();
 	else if (i == SIGWINCH)
 		resize_window();
 	else
 	{
-	  tm_end_session(arg);
-		exit(0);
+		tputs(tgetstr("cl", NULL), 1, pputchar);
+		tm_end_session(arg);
+		(i == SIGSTOP) ? signal(SIGSTOP, SIG_DFL) : (0);
 	}
 }
 
 void			tm_signal(void)
 {
-	int i;
-
-	i = 1;
-	while (i < 32)
-	{
-		signal(i, get_signal);
-		i++;
-	}
+	signal(SIGTSTP, &get_signal);
+	signal(SIGINT, &get_signal);
+	signal(SIGWINCH, &get_signal);
+	signal(SIGTERM, &get_signal);
+	signal(SIGCONT, &get_signal);
+	signal(SIGQUIT, &get_signal);
+	signal(SIGKILL, &get_signal);
 }
-
-// #include<stdio.h>
-// #include<signal.h>
-// #include<unistd.h>
-//
-// void sig_handler(int signo)
-// {
-//     if (signo == SIGUSR1)
-//         printf("received SIGUSR1\n");
-//     else if (signo == SIGKILL)
-//         printf("received SIGKILL\n");
-//     else if (signo == SIGINT)
-//         printf("received SIGINT\n");
-//     else if (signo == SIGSTOP)
-//         printf("received SIGSTOP\n");
-// }
-//
-// int main(void)
-// {
-//     if (signal(SIGUSR1, sig_handler) == SIG_ERR)
-//         printf("\ncan't catch SIGUSR1\n");
-//     if (signal(SIGKILL, sig_handler) == SIG_ERR)
-//         printf("\ncan't catch SIGKILL\n");
-//     if (signal(SIGSTOP, sig_handler) == SIG_ERR)
-//         printf("\ncan't catch SIGSTOP\n");
-//     while(1)
-//         sleep(1);
-//     return 0;
-// }
