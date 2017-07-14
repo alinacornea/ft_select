@@ -13,21 +13,22 @@
 #include "ft_select.h"
 
 /*
-**  SIGCONT continue if stopped
-**  SIGSTOP stop process
-**  SIGTSTP suspend process (VSUSP, default ctrl-Z, value 18)
-**  SIGINT interrupt from keyboard (VINTR, default ctrl-C)
-**  SIGTERM termination signal
-**  SIGWINCH window resize
+**	SIGCONT continue if stopped
+**	SIGSTOP stop process
+**	SIGTSTP suspend process (VSUSP, default ctrl-Z, value 18)
+**	SIGINT interrupt from keyboard (VINTR, default ctrl-C)
+**	SIGTERM termination signal
+**	SIGWINCH window resize
 **	SIGQUIT (VQUIT, default ctrl-\, value 3)
 **	SIGKILL kill the process (value 9)
-** 	TIOCSTI Insert the given byte in the input queue.
+**	TIOCSTI Insert the given byte in the input queue.
 **	VSUSP suspending the characters
+**	SIG_DFL the default action associated with the signal
 */
 
-t_select *get_info(void)
+t_select		*get_info(void)
 {
-	static t_select *arg;
+	static t_select	*arg;
 
 	if (arg == NULL)
 		arg = ft_memalloc(sizeof(t_select));
@@ -36,13 +37,14 @@ t_select *get_info(void)
 
 static	void	sig_stop(void)
 {
-	t_select	*arg = NULL;
-	char	cp[2];
+	t_select	*arg;
+	char		cp[2];
 
+	arg = NULL;
 	arg = get_info();
 	cp[0] = arg->term.c_cc[VSUSP];
 	cp[1] = 0;
-	arg->term.c_lflag |= (ICANON | ECHO); //set icanon and echo back
+	arg->term.c_lflag |= (ICANON | ECHO);
 	signal(SIGTSTP, SIG_DFL);
 	tputs(tgetstr("cl", NULL), 1, pputchar);
 	tcsetattr(0, 0, &(arg->term));
@@ -53,8 +55,9 @@ static	void	sig_stop(void)
 
 static void		sig_cont(void)
 {
-	t_select *arg = NULL;
+	t_select *arg;
 
+	arg = NULL;
 	arg = get_info();
 	arg->term.c_lflag &= ~(ICANON | ECHO);
 	arg->term.c_cc[VMIN] = 1;
@@ -64,7 +67,6 @@ static void		sig_cont(void)
 	tputs(tgetstr("vi", NULL), 1, pputchar);
 	signal(SIGTSTP, get_signal);
 	resize_window();
-	check_size_window(arg);
 }
 
 void			get_signal(int i)
@@ -83,6 +85,7 @@ void			get_signal(int i)
 		tputs(tgetstr("cl", NULL), 1, pputchar);
 		tm_end_session(arg);
 		(i == SIGSTOP) ? signal(SIGSTOP, SIG_DFL) : (0);
+		exit(0);
 	}
 }
 

@@ -12,34 +12,33 @@
 
 #include "ft_select.h"
 
-int check_size_window(t_select *arg)
+void	resize_window(void)
 {
-  if (arg->height - 2 < arg->count_lines)
-  {
-    tputs(tgetstr("cl", NULL), 1, pputchar);
-    return (0);
-  }
-  // else if(arg->begin->name_len > arg->width)
-  // {
-  //   tputs(tgetstr("cl", NULL), 1, pputchar);
-  //   return (0);
-  // }
-  else
-  {
-    tputs(tgetstr("cl", NULL), 1, pputchar);
-    tm_printlist(arg);
-  }
-  return (1);
+	int				colums;
+	t_select		*arg;
+	struct winsize	win;
+
+	arg = NULL;
+	arg = get_info();
+	colums = arg->count_lines / arg->height + 1;
+	ioctl(0, TIOCGWINSZ, &win);
+	arg->width = win.ws_col;
+	arg->height = win.ws_row;
+	tputs(tgetstr("cl", NULL), 1, pputchar);
+	if (colums < arg->width)
+		tm_printlist(arg);
+	else
+		ft_printf(C_RED"it's too smalll !!\n"C_RES);
 }
 
-void resize_window(void)
+void	position_cursor(t_select *arg, char *buff)
 {
-  t_select *arg;
-  struct winsize win;
+	t_lsarg	*tmp;
 
-  arg = NULL;
-  tputs(tgetstr("cl", NULL), 1, pputchar);
-  ioctl(0, TIOCGWINSZ, &win);
-  arg->height= win.ws_row;
-  arg->width = win.ws_col;
+	tmp = arg->begin;
+	while (tmp->cursor != 1)
+		tmp = tmp->next;
+	tmp->cursor = 0;
+	(INPUT == KEY_HOME) ? (arg->begin->cursor = 1) :
+	(arg->begin->prev->cursor = 1);
 }
