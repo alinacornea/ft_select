@@ -44,6 +44,7 @@ static void	get_selected(t_select *arg, int count)
 	{
 		arg->ret_tab[i] = ft_strdup(arg->begin->name);
 		free(arg->begin->name);
+		arg->begin->name = NULL;
 		i++;
 	}
 	tmp = arg->begin->next;

@@ -102,6 +102,5 @@ int		main(int argc, char **argv)
 		}
 	}
 	tm_end_session(arg);
-	sleep(20);
 	return (0);
 }
