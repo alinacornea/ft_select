@@ -24,7 +24,11 @@
 static void	select_format(t_lsarg *list)
 {
 	if (list->cursor == 1 && list->select == 1)
+	{
+		tputs(tgetstr("us", NULL), 1, pputchar);
 		ft_printf("%s%s%s\n", C_RED, list->name, C_RES);
+		tputs(tgetstr("ue", NULL), 1, pputchar);
+	}
 	else if (list->cursor == 1)
 	{
 		tputs(tgetstr("us", NULL), 1, pputchar);

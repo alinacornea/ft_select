@@ -32,7 +32,7 @@ t_lsarg		*tm_init_list(void)
 ** print them out.
 */
 
-static void	get_selected(t_select *arg, int count)
+static void	get_select(t_select *arg, int count)
 {
 	int		i;
 	t_lsarg	*tmp;
@@ -52,9 +52,8 @@ static void	get_selected(t_select *arg, int count)
 	{
 		if (tmp->select == 1)
 		{
-			arg->ret_tab[i] = ft_strdup(tmp->name);
+			arg->ret_tab[i++] = ft_strdup(tmp->name);
 			free(tmp->name);
-			i++;
 		}
 		tmp = tmp->next;
 	}
@@ -78,7 +77,7 @@ void		return_key(t_select *arg)
 			count_sel_lines++;
 		tmp = tmp->next;
 	}
-	get_selected(arg, count_sel_lines);
+	get_select(arg, count_sel_lines);
 }
 
 static void	create_list(t_select *arg, t_lsarg *ls)

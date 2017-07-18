@@ -44,7 +44,7 @@ int		tm_set_terminal(t_select *arg)
 
 	if ((tgetent(NULL, getenv("TERM"))) < 1)
 	{
-		ft_printf("%s.\n", ERROR);
+		ft_printf("%s\n", ERROR);
 		exit(0);
 	}
 	if ((tcgetattr(0, &(arg->term))) == -1)
