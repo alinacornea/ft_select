@@ -27,3 +27,6 @@
   4. Set buffer size to 1 byte and time wait to 0 sec, (VMIN, VTIME)<br />
   5. Set the attributes of the terminal making change immediately;<br />
   6. Extract information we will use using tgetstr(), tputs();<br />
+
+
+![screenshot](image.png)
